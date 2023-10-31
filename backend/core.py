@@ -6,19 +6,18 @@ from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain.vectorstores import Pinecone
 import pinecone
-
-from consts import INDEX_NAME
+import consts
 
 pinecone.init(
     api_key=os.environ["PINECONE_API_KEY"],
-    environment=os.environ["PINECONE_ENVIRONMENT_REGION"],
+    environment=os.environ["PINECONE_ENVIRONMENT"],
 )
 
 
 def run_llm(query: str) -> Any:
     embeddings = OpenAIEmbeddings()
     docsearch = Pinecone.from_existing_index(
-        index_name=INDEX_NAME, embedding=embeddings
+        index_name=consts.PINECONE_INDEX_NAME, embedding=embeddings
     )
     chat = ChatOpenAI(verbose=True, temperature=0)
     qa = RetrievalQA.from_chain_type(
