@@ -7,15 +7,19 @@ from langchain.chains import RetrievalQA
 from langchain.vectorstores import Pinecone
 import pinecone
 import consts
+from dotenv import load_dotenv
+
+# Load the .env file. By default, it looks for the .env file in the same directory as the script.
+load_dotenv()
 
 pinecone.init(
-    api_key=os.environ["PINECONE_API_KEY"],
-    environment=os.environ["PINECONE_ENVIRONMENT"],
+    api_key=os.getenv("PINECONE_API_KEY"),
+    environment=os.getenv("PINECONE_ENVIRONMENT"),
 )
 
 
 def run_llm(query: str) -> Any:
-    embeddings = OpenAIEmbeddings()
+    embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
     docsearch = Pinecone.from_existing_index(
         index_name=consts.PINECONE_INDEX_NAME, embedding=embeddings
     )
